@@ -24,10 +24,10 @@ member_dictionary = {}
 
 for member in members_response:
     member_name = member['login']
-    user_repos_url = base_url+"/users/"+member_name+"/repos?per_page=1000" # as default limit per page is 30
+    user_repos_url = base_url+"/users/"+member_name+"/repos?type=all&per_page=1000" # as default limit per page is 30
     r = requests.get(url = user_repos_url, auth = requests.auth.HTTPBasicAuth(username, password)) 
     repos_response = r.json()
-    repos_response_unforked = filter(lambda x: not x['fork'], repos_response) # filtering forked repos
+    repos_response_unforked = filter(lambda x: x['owner']['login']==organization_name, repos_response) # filtering repos in organization only
     repos_count = len(repos_response_unforked)
     member_dictionary[member_name] = repos_count
 
